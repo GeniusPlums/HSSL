@@ -1,101 +1,264 @@
-import Image from "next/image";
+'use client'
 
-export default function Home() {
+import { useState, useEffect } from "react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { ChevronUp, ChevronDown, ThumbsUp, Search, ArrowLeft } from "lucide-react"
+
+// Mock data for teams
+const initialTeams = [
+  { id: 1, name: "EcoTech Solutions", school: "Green Valley High", votes: 120, description: "Sustainable energy solutions for urban areas", category: "CleanTech", teamMembers: ["Alice Johnson", "Bob Smith", "Charlie Brown"], achievements: ["1st Place in Regional Science Fair", "Featured in Local News"] },
+  { id: 2, name: "HealthHub", school: "Wellness Academy", votes: 115, description: "AI-powered personal health assistant", category: "HealthTech", teamMembers: ["Diana Prince", "Clark Kent", "Bruce Wayne"], achievements: ["Best Health Innovation Award", "100,000 Beta Users"] },
+  { id: 3, name: "EduConnect", school: "Future Minds Institute", votes: 110, description: "Peer-to-peer tutoring platform", category: "EdTech", teamMembers: ["Eva Green", "Frank Castle", "Grace Hopper"], achievements: ["EdTech Startup of the Year", "1 Million Learning Hours Facilitated"] },
+  { id: 4, name: "SafeSpace", school: "Cyber Security High", votes: 105, description: "Secure communication app for teens", category: "Cybersecurity", teamMembers: ["Hank Pym", "Janet van Dyne", "Scott Lang"], achievements: ["Best Cybersecurity Solution", "NIST Recognition"] },
+  { id: 5, name: "GreenThumb", school: "Eco Warriors School", votes: 100, description: "Smart urban gardening solution", category: "AgriTech", teamMembers: ["Ivy Pepper", "Jack Frost", "Kate Bishop"], achievements: ["Sustainable Innovation Prize", "10,000 Urban Gardens Created"] },
+]
+
+const categories = ["All", "CleanTech", "HealthTech", "EdTech", "Cybersecurity", "AgriTech"]
+
+export default function EnhancedHSSLVotingPlatform() {
+  const [selectedTeam, setSelectedTeam] = useState<number | null>(null)
+  const [phoneNumber, setPhoneNumber] = useState("")
+  const [otp, setOtp] = useState("")
+  const [isOtpSent, setIsOtpSent] = useState(false)
+  const [activeTab, setActiveTab] = useState("pitches")
+  const [searchTerm, setSearchTerm] = useState("")
+  const [selectedCategory, setSelectedCategory] = useState("All")
+  const [filteredTeams, setFilteredTeams] = useState(initialTeams)
+  const [teamDetailsId, setTeamDetailsId] = useState<number | null>(null)
+
+  useEffect(() => {
+    const filtered = initialTeams.filter((team) => {
+      const matchesSearch = 
+        team.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        team.school.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        team.description.toLowerCase().includes(searchTerm.toLowerCase())
+      const matchesCategory = selectedCategory === "All" || team.category === selectedCategory
+      return matchesSearch && matchesCategory
+    })
+    setFilteredTeams(filtered)
+  }, [searchTerm, selectedCategory])
+
+  const handleVote = () => {
+    // Implement voting logic here
+    console.log(`Voted for team ${selectedTeam}`)
+    setSelectedTeam(null)
+    setPhoneNumber("")
+    setOtp("")
+    setIsOtpSent(false)
+  }
+
+  const sendOtp = () => {
+    // Implement OTP sending logic here
+    console.log(`OTP sent to ${phoneNumber}`)
+    setIsOtpSent(true)
+  }
+
+  const handleTeamDetails = (teamId: number) => {
+    setTeamDetailsId(teamId)
+    setActiveTab("teamDetails")
+  }
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-4xl font-bold text-center mb-8">
+        Masters' Union High School Startup League - Final Voting
+      </h1>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      <div className="mb-6 flex flex-col sm:flex-row gap-4">
+        <div className="relative flex-grow">
+          <Input
+            type="text"
+            placeholder="Search projects..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+          />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+          <SelectTrigger className="w-full sm:w-[180px]">
+            <SelectValue placeholder="Select category" />
+          </SelectTrigger>
+          <SelectContent>
+            {categories.map((category) => (
+              <SelectItem key={category} value={category}>
+                {category}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="pitches">Video Pitches</TabsTrigger>
+          <TabsTrigger value="leaderboard">Live Leaderboard</TabsTrigger>
+          <TabsTrigger value="teamDetails" disabled={!teamDetailsId}>Team Details</TabsTrigger>
+        </TabsList>
+        <TabsContent value="pitches">
+          <ScrollArea className="h-[calc(100vh-300px)]">
+            <div className="space-y-4">
+              {filteredTeams.map((team) => (
+                <Card key={team.id} className="overflow-hidden">
+                  <CardHeader className="bg-primary text-primary-foreground p-4 flex flex-row items-center justify-between">
+                    <div>
+                      <CardTitle className="text-xl">{team.name}</CardTitle>
+                      <CardDescription className="text-primary-foreground/80">{team.school}</CardDescription>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-2xl font-bold">{team.votes}</span>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button 
+                            variant="secondary" 
+                            size="icon"
+                            onClick={() => setSelectedTeam(team.id)}
+                          >
+                            <ThumbsUp className="h-4 w-4" />
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Vote for {team.name}</DialogTitle>
+                          </DialogHeader>
+                          <div className="space-y-4">
+                            <Input
+                              type="tel"
+                              placeholder="Enter your phone number"
+                              value={phoneNumber}
+                              onChange={(e) => setPhoneNumber(e.target.value)}
+                            />
+                            {!isOtpSent ? (
+                              <Button onClick={sendOtp}>Send OTP</Button>
+                            ) : (
+                              <>
+                                <Input
+                                  type="text"
+                                  placeholder="Enter OTP"
+                                  value={otp}
+                                  onChange={(e) => setOtp(e.target.value)}
+                                />
+                                <Button onClick={handleVote}>Submit Vote</Button>
+                              </>
+                            )}
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="p-4">
+                    <div className="aspect-video bg-gray-200 mb-4">
+                      {/* Replace with actual video component */}
+                      <div className="flex items-center justify-center h-full">
+                        Video Pitch Placeholder
+                      </div>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-2">{team.description}</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-medium bg-secondary text-secondary-foreground px-2 py-1 rounded-full">
+                        {team.category}
+                      </span>
+                      <Button variant="link" onClick={() => handleTeamDetails(team.id)}>
+                        View Team Details
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </ScrollArea>
+        </TabsContent>
+        <TabsContent value="leaderboard">
+          <Card>
+            <CardHeader>
+              <CardTitle>Live Leaderboard</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[100px]">Rank</TableHead>
+                    <TableHead>Team Name</TableHead>
+                    <TableHead>School</TableHead>
+                    <TableHead>Category</TableHead>
+                    <TableHead className="text-right">Votes</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredTeams
+                    .sort((a, b) => b.votes - a.votes)
+                    .map((team, index) => (
+                      <TableRow key={team.id}>
+                        <TableCell className="font-medium">
+                          {index === 0 && <ChevronUp className="inline-block mr-1 text-green-500" />}
+                          {index === filteredTeams.length - 1 && <ChevronDown className="inline-block mr-1 text-red-500" />}
+                          {index + 1}
+                        </TableCell>
+                        <TableCell>{team.name}</TableCell>
+                        <TableCell>{team.school}</TableCell>
+                        <TableCell>{team.category}</TableCell>
+                        <TableCell className="text-right">{team.votes}</TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="teamDetails">
+          {teamDetailsId && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Button variant="ghost" size="sm" className="mr-2" onClick={() => setActiveTab("pitches")}>
+                    <ArrowLeft className="h-4 w-4" />
+                  </Button>
+                  {initialTeams.find(team => team.id === teamDetailsId)?.name} Details
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="font-semibold">School</h3>
+                    <p>{initialTeams.find(team => team.id === teamDetailsId)?.school}</p>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">Category</h3>
+                    <p>{initialTeams.find(team => team.id === teamDetailsId)?.category}</p>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">Description</h3>
+                    <p>{initialTeams.find(team => team.id === teamDetailsId)?.description}</p>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">Team Members</h3>
+                    <ul className="list-disc list-inside">
+                      {initialTeams.find(team => team.id === teamDetailsId)?.teamMembers.map((member, index) => (
+                        <li key={index}>{member}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">Achievements</h3>
+                    <ul className="list-disc list-inside">
+                      {initialTeams.find(team => team.id === teamDetailsId)?.achievements.map((achievement, index) => (
+                        <li key={index}>{achievement}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </TabsContent>
+      </Tabs>
     </div>
-  );
+  )
 }
