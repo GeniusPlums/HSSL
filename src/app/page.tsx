@@ -35,7 +35,7 @@ export default function EnhancedHSSLVotingPlatform() {
 
   useEffect(() => {
     const filtered = initialTeams.filter((team) => {
-      const matchesSearch = 
+      const matchesSearch =
         team.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         team.school.toLowerCase().includes(searchTerm.toLowerCase()) ||
         team.description.toLowerCase().includes(searchTerm.toLowerCase())
@@ -68,7 +68,7 @@ export default function EnhancedHSSLVotingPlatform() {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold text-center mb-8">
-        Masters' Union High School Startup League - Final Voting
+        Masters&apos; Union High School Startup League - Final Voting
       </h1>
 
       <div className="mb-6 flex flex-col sm:flex-row gap-4">
@@ -116,8 +116,8 @@ export default function EnhancedHSSLVotingPlatform() {
                       <span className="text-2xl font-bold">{team.votes}</span>
                       <Dialog>
                         <DialogTrigger asChild>
-                          <Button 
-                            variant="secondary" 
+                          <Button
+                            variant="secondary"
                             size="icon"
                             onClick={() => setSelectedTeam(team.id)}
                           >
